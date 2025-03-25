@@ -17,7 +17,7 @@ class PromptVariable(models.Model):
     enable_hr = models.BooleanField(default=False)  #Включение и отключение хайресфикса
 
 #    hr_upscaler = models.CharField(max_length=100)    #Апскелер
-    hr_checkpoint_name = models.CharField(default='calicomix', max_length=100)   #Модель нейронки
+    hr_checkpoint_name = models.CharField(default='calicomix.safetensors', max_length=100)   #Модель нейронки
    #Подумать над существованием этого поля
 #    sd_model_checkpoint = models.CharField(max_length=100)  #По сути, та же самая модель, но должна быть точно такой же, как и в hr_checkpoint_name
 

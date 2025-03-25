@@ -1,9 +1,10 @@
-from django.core.management.base import BaseCommand
+import asyncio
+
+from aiogram import Bot, Dispatcher
 from django.conf import settings
+from django.core.management.base import BaseCommand
 
 from bot import logger
-from aiogram import Bot, Dispatcher
-import asyncio
 
 
 async def on_startup(bot: Bot):
@@ -34,8 +35,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         from bot.generate_session import bot, dp
+        from bot.handlers import main_router
 
-
+        dp.include_router(main_router)
         setup_main_middleware(dp)
 
         dp.startup.register(on_startup)
