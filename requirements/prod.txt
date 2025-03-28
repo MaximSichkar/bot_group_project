@@ -1,0 +1,4 @@
+-r common.txt
+psycopg2==2.9.9
+gunicorn==21.2.0
+redis==5.0.3
