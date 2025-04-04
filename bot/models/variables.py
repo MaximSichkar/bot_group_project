@@ -14,10 +14,10 @@ class PromptVariable(models.Model):
     width = models.BigIntegerField(default=480)    #Параметр размерности картинки (Ширина)
     height = models.BigIntegerField(default=800)  #Параметр размерности картинки (Висота)
 
-    enable_hr = models.BooleanField(default=False)  #Включение и отключение хайресфикса
+    enable_hr = models.BooleanField(default=True)  #Включение и отключение хайресфикса
 
 #    hr_upscaler = models.CharField(max_length=100)    #Апскелер
-    hr_checkpoint_name = models.CharField(default='calicomix.safetensors', max_length=100)   #Модель нейронки
+    hr_checkpoint_name = models.CharField(default='level4XL.safetensors', max_length=100)   #Модель нейронки
    #Подумать над существованием этого поля
 #    sd_model_checkpoint = models.CharField(max_length=100)  #По сути, та же самая модель, но должна быть точно такой же, как и в hr_checkpoint_name
 

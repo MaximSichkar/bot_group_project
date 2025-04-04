@@ -11,7 +11,6 @@ from bot.models import PromptVariable, User
 router = Router()
 
 
-@router.message(F.content_type == ContentType.TEXT)
 @router.callback_query(F.data.startswith('generation'))
 async def generation(event: CallbackQuery | Message, user: User):
     if isinstance(event, Message):
