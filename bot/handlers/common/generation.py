@@ -33,35 +33,30 @@ async def update_progress(message: Message):
 
 
 @router.callback_query(F.data.startswith('generation'))
-async def generation(message: Message, user: User):
-    if isinstance(message, Message):
-        prompt_variables_dict = {"prompt": message.text}
-    else:
-        await message.edit_text('Starting generation...')
+async def generation(callback: CallbackQuery, user: User):
+    await callback.message.edit_text('Starting generation...')
 
-        data = message.data.split(':')
-        prompt_variable = await PromptVariable.objects.aget(id=data[1])
+    data = callback.data.split(':')  # а не callback.message.data
+    prompt_variable = await PromptVariable.objects.aget(id=data[1])
 
-        prompt_variables_dict = {
-            "prompt": prompt_variable.prompt,
-            'batch_size': prompt_variable.batch_size,
-            'width': prompt_variable.width,
-            'height': prompt_variable.height,
-            'enable_hr': prompt_variable.enable_hr,
-            'hr_checkpoint_name': prompt_variable.hr_checkpoint_name
-        }
+    prompt_variables_dict = {
+        "prompt": prompt_variable.prompt,
+        'batch_size': prompt_variable.batch_size,
+        'width': prompt_variable.width,
+        'height': prompt_variable.height,
+        'enable_hr': prompt_variable.enable_hr,
+        'hr_checkpoint_name': getattr(prompt_variable, 'hr_checkpoint_name', 'default_model.safetensors')
+    }
 
-    progress_msg = await message.answer("🚀 Начинаю генерацию изображения...")
+    progress_msg = await callback.message.answer("🚀 Починаю генерацію зображення...")
 
     _ = asyncio.create_task(update_progress(progress_msg))
 
     images = await txt2img_generate(prompt_variables_dict)
 
-    for i in range(len(images)):
-        img = images[i]
-        file_name = f"{i + 1}-image.png"
+    for i, img in enumerate(images):
         img_bytes = BytesIO()
         img.save(img_bytes, "PNG")
-        file = BufferedInputFile(img_bytes.getvalue(), file_name)
+        file = BufferedInputFile(img_bytes.getvalue(), f"{i + 1}-image.png")
 
-        await message.answer_document(file)
+        await callback.message.answer_document(file)
